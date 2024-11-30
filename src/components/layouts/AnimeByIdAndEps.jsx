@@ -58,7 +58,7 @@ const AnimeByIdAndEps = ({ episode, id }) => {
             Reviews {animeComment?.length}
           </h1>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 h-full">
             {animeComment?.map((anime, i) => (
               <AnimeReview key={i} review={anime} />
             ))}

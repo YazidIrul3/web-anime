@@ -1,13 +1,15 @@
 "use client";
 
-import { useFetchAnime } from "@/features/anime/useFetchAnime";
 import Card from "../fragments/Card";
 import { useEffect, useState } from "react";
 import { axiosInstace } from "@/libs/axios";
 import AnimeCardLoading from "../fragments/AnimeCardLoading";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const TopAnime = () => {
-  const [page, setPage] = useState(1);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const page = Number(searchParams.get("page") || 1);
 
   const [anime, setAnime] = useState([]);
   const [isLoad, setLoad] = useState(true);
@@ -24,8 +26,14 @@ const TopAnime = () => {
     }
   };
 
+  const handleChangePage = (page) => {
+    router.push("/anime/top?page=" + page);
+  };
+
   useEffect(() => {
-    setLoad(true);
+    if (router.isReady) {
+      setLoad(true);
+    }
     getAnime();
   }, [page]);
 
@@ -50,7 +58,7 @@ const TopAnime = () => {
 
           <div className="flex items-center justify-center gap-5 py-7">
             <button
-              onClick={() => setPage((prev) => prev - 1)}
+              onClick={() => handleChangePage(page - 1)}
               disabled={page === 1}
               className="px-4 py-2 bg-blue-500 text-slate-50 font-bold rounded-lg hover:bg-blue-700"
             >
@@ -60,13 +68,15 @@ const TopAnime = () => {
             <p>{page}</p>
 
             <button
-              onClick={() => setPage((prev) => prev + 1)}
+              onClick={() => handleChangePage(page + 1)}
               disabled={page === anime?.data?.pagination?.last_visible_page}
               className="px-4 py-2 bg-blue-500 text-slate-50 font-bold rounded-lg hover:bg-blue-700"
             >
               +
             </button>
           </div>
+
+          
         </div>
       )}
     </div>
